@@ -1,0 +1,33 @@
+<template>
+  <div id="app">
+    <table-component></table-component>
+  </div>
+</template>
+
+<script>
+import tableComponent from './components/table-component';
+
+export default {
+  name: 'app',
+  data () {
+    return {
+    }
+  },
+  components: {
+    "table-component": tableComponent
+  }
+}
+</script>
+
+<style lang="scss">
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+</style>
