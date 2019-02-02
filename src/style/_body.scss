@@ -1,0 +1,7 @@
+@import '~@/_flex-mixin.scss';
+
+html, body {
+@include flex();
+height: 100%;
+width: 100%;
+max-width: 100%;}
