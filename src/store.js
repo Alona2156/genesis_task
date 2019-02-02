@@ -18,13 +18,55 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
-    getItems(state, data){
-      state.items = data.items;
-      state.itemsCount = data.count;
-    }
+  getItems(state, data) {
+    state.items = data.items;
+    state.itemsCount = data.count;
   },
+  sortBy(state, data) {
+    var falseValues = ['none', 'n/a', 'unknown', undefined];
+      state.items.sort((a, b) => {
+        if (data.header === "birth_year"){
+          if (falseValues.indexOf(a[data.header]) === -1 ){
+            var prev = parseFloat(a[data.header]);
+          }
+          if (falseValues.indexOf(b[data.header]) === -1 ){
+            var next = parseFloat(b[data.header]);
+          }
+        }
+        else {
+          var prev = a[data.header];
+          var next = b[data.header];
+        }
+        if (falseValues.indexOf(prev) !== -1){
+          return 1;
+        }
+        else if (falseValues.indexOf(next) !== -1){
+          return -1;
+        }
+        else if (prev === next){
+          return 0;
+        }
+        else if (prev < next) {
+          if (data.order === "desc"){
+            return -1;
+          }
+          else {
+            return 1;
+          }
+        }
+        else if (prev > next) {
+          if (data.order === "desc"){
+            return 1;
+          }
+          else {
+            return -1;  
+          }
+        }
+      });
+    }
+},
   actions: {
-    getItems({commit, dispatch}){
+    getItems({commit}){
       axios.get('http://localhost:3001/items')
         .then(response =>{
           commit('getItems', response.data);
@@ -32,6 +74,9 @@ export const store = new Vuex.Store({
         .catch(error=>{
           console.log(error);
         })
+    },
+    sortBy({commit}, payload){
+      commit('sortBy', payload);
     }
   }
 })
