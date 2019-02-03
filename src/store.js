@@ -59,7 +59,7 @@ export const store = new Vuex.Store({
             return 1;
           }
           else {
-            return -1;  
+            return -1;
           }
         }
       });
