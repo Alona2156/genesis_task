@@ -13,7 +13,7 @@ export default{
   },
   computed: {
     itemsCount(){
-      return this.$store.state.itemsCount;
+      return this.$store.state.filteredItems.length;
     },
     pagesCount(){
       return Math.ceil(this.itemsCount/10);

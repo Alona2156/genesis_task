@@ -19,7 +19,7 @@ export default {
   },
   computed: {
     items(){
-      return this.$store.state.items;
+      return this.$store.state.filteredItems;
     },
     headers(){
       return this.$store.getters.headers;
@@ -36,7 +36,7 @@ export default {
       var payload = {};
       payload.header = header.replace(/\s/g, "_").toLowerCase();
       payload.order = this.order;
-      this.$store.dispatch('sortBy', payload);
+      this.$store.commit('sortBy', payload);
     },
     toggleSortingOrder(){
       if (this.prevSortBy === this.sortBy){
@@ -45,6 +45,9 @@ export default {
         }
         else if (this.order === "desc"){
           this.order = "asc";
+        }
+        else {
+          this.order = "desc";
         }
       }
       else {

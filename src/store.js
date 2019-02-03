@@ -7,7 +7,8 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   state: {
     items: [{}],
-    itemsCount: 0
+    itemsCount: 0,
+    filteredItems: []
   },
   getters: {
     headers: state => {
@@ -21,10 +22,11 @@ export const store = new Vuex.Store({
   getItems(state, data) {
     state.items = data.items;
     state.itemsCount = data.count;
+    state.filteredItems = state.items;
   },
   sortBy(state, data) {
     var falseValues = ['none', 'n/a', 'unknown', undefined];
-      state.items.sort((a, b) => {
+      state.filteredItems.sort((a, b) => {
         if (data.header === "birth_year"){
           if (falseValues.indexOf(a[data.header]) === -1 ){
             var prev = parseFloat(a[data.header]);
@@ -63,6 +65,14 @@ export const store = new Vuex.Store({
           }
         }
       });
+    },
+    filterTable(state, payload){
+      this.state.filteredItems = this.state.items.filter((item) => {
+        return item[payload.key] === payload.value;
+      });
+    },
+    resetFilter(state){
+      this.state.filteredItems = this.state.items;
     }
 },
   actions: {
@@ -74,9 +84,6 @@ export const store = new Vuex.Store({
         .catch(error=>{
           console.log(error);
         })
-    },
-    sortBy({commit}, payload){
-      commit('sortBy', payload);
     }
   }
 })

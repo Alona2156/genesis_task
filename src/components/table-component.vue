@@ -18,7 +18,7 @@ export default {
       currentPage: 1,
       sortBy: "Name",
       prevSortBy: "Name",
-      order: 'asc'
+      order: 'mixed'
     }
   },
   methods: {
