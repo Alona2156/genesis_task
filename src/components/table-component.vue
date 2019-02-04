@@ -1,7 +1,7 @@
 <template>
   <div id="table">
   <p id="sorting">Sorted by: {{sortBy}}, {{order}}</p>
-  <filtering></filtering>
+  <filtering v-bind:currentPage="currentPage" v-on:loadNextPage="updateCurrentPage($event)"></filtering>
   <items-table v-bind:currentPage="currentPage" v-bind:sortBy="sortBy" v-bind:prevSortBy="prevSortBy" v-bind:order="order" v-on:update_sortBy_prevSortBy_order="updateData($event)"></items-table>
   <pagination v-bind:currentPage="currentPage" v-on:loadNextPage="updateCurrentPage($event)"></pagination>
 </div>

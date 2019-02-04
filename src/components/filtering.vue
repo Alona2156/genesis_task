@@ -1,11 +1,11 @@
 <template>
   <div id="filtering">
     <p>Filter by:</p>
-    <select id="chooseHeader" v-model="filterHeader" @change="createItemsSet">
+    <select id="chooseHeader" v-model="mainFilterHeader" @change="createOptionsSet">
       <option v-for="header in headers" >{{header}}</option>
     </select>
-    <select id="chooseItem" v-model="filterValue" @change="filterTable">
-      <option v-for="item in itemValues">{{item}}</option>
+    <select id="chooseOption" v-model="mainFilterOptions" @change="filterTable">
+      <option v-for="item in filterOptions">{{item}}</option>
     </select>
     <div id="reset" @click="resetFilter">
       Reset
@@ -15,11 +15,13 @@
 
 <script>
 export default {
+  props: ['currentPage'],
   data(){
     return{
-      filterHeader: "",
-      itemValues: "",
-      filterValue: ""
+      mainFilterHeader: "",
+      mainFilterOptions: "",
+      filterOptions: "",
+      dataType: ""
     }
   },
   computed: {
@@ -29,26 +31,60 @@ export default {
     headers(){
       return this.$store.getters.headers;
     },
-    filterByHeader(){
-      return this.filterHeader.replace(/\s/g, "_").toLowerCase();
+    filterHeader(){
+      return this.mainFilterHeader.replace(/\s/g, "_").toLowerCase();
     }
   },
   methods: {
-    createItemsSet(){
-      this.itemValues = new Set();
-      this.items.forEach((item) =>{
-        this.itemValues.add(item[this.filterByHeader]);
-      });
-      this.itemValues = Array.from(this.itemValues);
+    createOptionsSet(){
+      if (this.filterHeader !== "mass" && this.filterHeader !== "height" && this.filterHeader !== "birth_year"){
+        this.filterOptions = new Set();
+        this.items.forEach((item) =>{
+          this.filterOptions.add(item[this.filterHeader]);
+        });
+        this.filterOptions = Array.from(this.filterOptions);
+        this.dataType = "string";
+      }
+      else {
+        this.createNumberRanges();
+        this.dataType = "number";
+      }
     },
     filterTable(){
-      this.$store.commit('filterTable', {key: this.filterByHeader, value: this.filterValue});
+      this.$emit('loadNextPage', 1);
+      this.$store.commit('filterTable', {key: this.filterHeader, value: this.mainFilterOptions, type: this.dataType});
     },
     resetFilter(){
       this.$store.commit('resetFilter');
-      this.filterHeader = "";
-      this.filterValue = "";
-      this.itemValues = "";
+      this.mainFilterHeader = "";
+      this.mainFilterOptions = "";
+      this.filterOptions = "";
+    },
+    createNumberRanges(){
+      var allValues = [];
+      this.items.forEach((item) =>{
+        var itemVal = parseFloat(item[this.filterHeader]);
+        if(!isNaN(itemVal)){
+          allValues.push(itemVal);
+        }
+      });
+      var firstValue = Math.floor(Math.min.apply(null,allValues)/10)*10;
+      var lastValue = Math.ceil(Math.max.apply(null, allValues)/10)*10;
+      this.filterOptions = [];
+      var stringNum = -1;
+      var rangeStep = (lastValue - firstValue)/5;
+      rangeStep = Math.ceil(rangeStep/10)*10;
+      var rangeStepNumber = ((lastValue - firstValue)/rangeStep);
+      for (var i = firstValue; i <= lastValue+rangeStep; i+=rangeStep){
+          if (stringNum > -1 && stringNum < rangeStepNumber){
+            this.filterOptions[stringNum] += i.toString();
+          }
+          stringNum ++;
+          if (stringNum < rangeStepNumber){
+            this.filterOptions.push(i.toString());
+            this.filterOptions[stringNum] += " - ";
+          }
+      }
     }
   }
 }

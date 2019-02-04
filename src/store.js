@@ -67,9 +67,19 @@ export const store = new Vuex.Store({
       });
     },
     filterTable(state, payload){
-      this.state.filteredItems = this.state.items.filter((item) => {
-        return item[payload.key] === payload.value;
-      });
+      if (payload.type === "string"){
+        this.state.filteredItems = this.state.items.filter((item) => {
+          return item[payload.key] === payload.value;
+        });
+      }
+      else if (payload.type === "number") {
+        var payloadValue = payload.value.replace(/\s/g, "");
+        var numberRangeFrom = payloadValue.match(/(\d+)\-/)[1];
+        var numberRangeTo = payloadValue.match(/\-(\d+)/)[1];
+          this.state.filteredItems = this.state.items.filter((item) =>{
+            return parseFloat(item[payload.key]) >= numberRangeFrom && parseFloat(item[payload.key]) <= numberRangeTo;
+          });
+      }
     },
     resetFilter(state){
       this.state.filteredItems = this.state.items;
