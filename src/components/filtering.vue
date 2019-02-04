@@ -1,91 +1,34 @@
 <template>
   <div id="filtering">
     <p>Filter by:</p>
-    <select id="chooseHeader" v-model="mainFilterHeader" @change="createOptionsSet">
-      <option v-for="header in headers" >{{header}}</option>
-    </select>
-    <select id="chooseOption" v-model="mainFilterOptions" @change="filterTable">
-      <option v-for="item in filterOptions">{{item}}</option>
-    </select>
-    <div id="reset" @click="resetFilter">
-      Reset
+    <filtering-block v-bind:currentPage="currentPage" v-on:loadNextPage="updatePage($event)"></filtering-block>
+    <div id="addFilterContainer">
+      <div id="addFilter" class="filter-button" @click="addNewFilter">
+         Add filter
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import filteringBlock from './filteringBlock.vue';
+
 export default {
   props: ['currentPage'],
   data(){
     return{
-      mainFilterHeader: "",
-      mainFilterOptions: "",
-      filterOptions: "",
-      dataType: ""
-    }
-  },
-  computed: {
-    items(){
-      return this.$store.state.items;
-    },
-    headers(){
-      return this.$store.getters.headers;
-    },
-    filterHeader(){
-      return this.mainFilterHeader.replace(/\s/g, "_").toLowerCase();
     }
   },
   methods: {
-    createOptionsSet(){
-      if (this.filterHeader !== "mass" && this.filterHeader !== "height" && this.filterHeader !== "birth_year"){
-        this.filterOptions = new Set();
-        this.items.forEach((item) =>{
-          this.filterOptions.add(item[this.filterHeader]);
-        });
-        this.filterOptions = Array.from(this.filterOptions);
-        this.dataType = "string";
-      }
-      else {
-        this.createNumberRanges();
-        this.dataType = "number";
-      }
+    updatePage(page){
+      this.$emit('updatePage', page);
     },
-    filterTable(){
-      this.$emit('loadNextPage', 1);
-      this.$store.commit('filterTable', {key: this.filterHeader, value: this.mainFilterOptions, type: this.dataType});
-    },
-    resetFilter(){
-      this.$store.commit('resetFilter');
-      this.mainFilterHeader = "";
-      this.mainFilterOptions = "";
-      this.filterOptions = "";
-    },
-    createNumberRanges(){
-      var allValues = [];
-      this.items.forEach((item) =>{
-        var itemVal = parseFloat(item[this.filterHeader]);
-        if(!isNaN(itemVal)){
-          allValues.push(itemVal);
-        }
-      });
-      var firstValue = Math.floor(Math.min.apply(null,allValues)/10)*10;
-      var lastValue = Math.ceil(Math.max.apply(null, allValues)/10)*10;
-      this.filterOptions = [];
-      var stringNum = -1;
-      var rangeStep = (lastValue - firstValue)/5;
-      rangeStep = Math.ceil(rangeStep/10)*10;
-      var rangeStepNumber = ((lastValue - firstValue)/rangeStep);
-      for (var i = firstValue; i <= lastValue+rangeStep; i+=rangeStep){
-          if (stringNum > -1 && stringNum < rangeStepNumber){
-            this.filterOptions[stringNum] += i.toString();
-          }
-          stringNum ++;
-          if (stringNum < rangeStepNumber){
-            this.filterOptions.push(i.toString());
-            this.filterOptions[stringNum] += " - ";
-          }
-      }
+    addNewFilter(){
+      console.log('add new filter');
     }
+  },
+  components: {
+    'filtering-block': filteringBlock
   }
 }
 </script>
@@ -95,26 +38,27 @@ export default {
 @import '~@/_colors.scss';
 
 #filtering {
-  @include flex($fxd: row, $jc: flex-start);
-  width: 100%;
+  @include flex(space-between, center, row);
   align-self: flex-start;
-  margin: 0 0 10px 0;
+  flex-wrap: wrap;
+  margin:0 0 10px 0;
   padding: 0;
-  * {
-    margin: 0 15px 0 0;
-    padding: 0px;
-  }
+  width: 100%;
 }
 
-#reset {
-  margin-left: auto;
-  margin-right: 0;
+.filter-button {
   padding: 3px 8px;
-  color: $grey;
+  color: white;
   background-color: $green;
   font-weight: bold;
   border: 1px solid transparent;
   border-radius: 5px;
   cursor: pointer;
+}
+
+#addFilterContainer {
+  flex-basis: 100%;
+  @include flex($ai: flex-start);
+  margin: 0;
 }
 </style>
