@@ -1,0 +1,11 @@
+@import '~@/_colors.scss';
+
+.filter-button {
+  padding: 3px 8px;
+  color: white;
+  background-color: $green;
+  font-weight: bold;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  cursor: pointer;
+}

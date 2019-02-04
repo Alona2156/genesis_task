@@ -4,6 +4,8 @@ const axios = require('axios');
 
 Vue.use(Vuex);
 
+import {eventBus} from 'main';
+
 export const store = new Vuex.Store({
   state: {
     items: [{}],

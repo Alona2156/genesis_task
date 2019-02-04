@@ -7,7 +7,7 @@
 <select id="chooseOption" v-model="mainFilterOptions" :disabled="!notFiltered">
   <option v-for="item in filterOptions">{{item}}</option>
 </select>
-<div id="confirm" @click="filterTable" v-if="notFiltered">
+<div class="confirm" @click="filterTable" v-if="notFiltered">
   Confirm
 </div>
 </div>
@@ -54,9 +54,11 @@ export default {
       }
     },
     filterTable(){
-      this.$emit('loadNextPage', 1);
-      this.$store.commit('filterTable', {key: this.filterHeader, value: this.mainFilterOptions, type: this.dataType});
-      this.notFiltered = 0;
+      if (this.filterHeader.length > 0 && this.mainFilterOptions.length > 0 && this.dataType.length > 0){
+        this.$emit('loadNextPage', 1);
+        this.$store.commit('filterTable', {key: this.filterHeader, value: this.mainFilterOptions, type: this.dataType});
+        this.notFiltered = 0;
+      }
     },
     createNumberRanges(){
       var allValues = [];
@@ -91,7 +93,6 @@ export default {
       this.mainFilterOptions = "";
       this.filterOptions = "";
       this.notFiltered = 1;
-      this.$emit('loadNextPage', 1);
     })
   }
 }
@@ -100,6 +101,8 @@ export default {
 <style lang="scss">
 @import '~@/_colors.scss';
 @import '~@/_flex-mixin.scss';
+@import '~@/_add-reset-button.scss';
+@import '~@/_confirm-show-button.scss';
 
 #filtering-block {
   @include flex($fxd: row, $jc: flex-start);
@@ -110,25 +113,6 @@ export default {
   * {
     margin: 0 25px 0 0;
   }
-}
-
-.filter-button {
-  padding: 3px 8px;
-  color: white;
-  background-color: $green;
-  font-weight: bold;
-  border: 1px solid transparent;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-#confirm {
-  padding: 3px 8px;
-  background-color: white;
-  border: 2px solid $green;
-  border-radius: 5px;
-  cursor: pointer;
-  letter-spacing: 1.2px;
 }
 
 </style>

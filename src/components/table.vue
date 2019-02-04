@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import {eventBus} from 'main';
+
 export default {
   props: ['currentPage', 'sortBy', 'prevSortBy', 'order'],
   data(){

@@ -1,14 +1,14 @@
 <template>
-<div id="mainContainer">
+  <div id="mainContainer">
     <filtering-block v-bind:currentPage="currentPage" v-bind:numberOfFilters="numberOfFilters" v-on:loadNextPage="updatePage($event)" v-for="index in numberOfFilters"></filtering-block>
-  <div id="buttonsContainer">
-    <div id="addFilter" class="filter-button" @click="addNewFilter">
-       Add filter
+    <div id="buttonsContainer">
+      <div id="addFilter" class="filter-button" @click="addNewFilter">
+         Add filter
+      </div>
+      <div class="filter-button" @click="resetFilter">
+        Reset
+      </div>
     </div>
-    <div id="reset" class="filter-button" @click="resetFilter">
-      Reset
-    </div>
-  </div>
   </div>
 </template>
 
@@ -41,6 +41,7 @@ export default {
       this.$store.commit('resetFilter');
       this.numberOfFilters = 1;
       eventBus.$emit('resetSelectedFilter');
+      this.updatePage(1);
     }
   },
   components: {
@@ -52,20 +53,11 @@ export default {
 <style lang="scss">
 @import '~@/_flex-mixin.scss';
 @import '~@/_colors.scss';
+@import '~@/_add-reset-button.scss';
 
 #mainContainer {
   @include flex();
   width: 100%;
-}
-
-.filter-button {
-  padding: 3px 8px;
-  color: white;
-  background-color: $green;
-  font-weight: bold;
-  border: 1px solid transparent;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
 #buttonsContainer {
