@@ -68,7 +68,7 @@ export const store = new Vuex.Store({
     },
     filterTable(state, payload){
       if (payload.type === "string"){
-        this.state.filteredItems = this.state.items.filter((item) => {
+        this.state.filteredItems = this.state.filteredItems.filter((item) => {
           return item[payload.key] === payload.value;
         });
       }
@@ -76,7 +76,7 @@ export const store = new Vuex.Store({
         var payloadValue = payload.value.replace(/\s/g, "");
         var numberRangeFrom = payloadValue.match(/(\d+)\-/)[1];
         var numberRangeTo = payloadValue.match(/\-(\d+)/)[1];
-          this.state.filteredItems = this.state.items.filter((item) =>{
+          this.state.filteredItems = this.state.filteredItems.filter((item) =>{
             return parseFloat(item[payload.key]) >= numberRangeFrom && parseFloat(item[payload.key]) <= numberRangeTo;
           });
       }

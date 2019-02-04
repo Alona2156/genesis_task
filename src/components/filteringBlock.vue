@@ -1,18 +1,21 @@
 <template>
 <div id="filtering-block">
-<select id="chooseHeader" v-model="mainFilterHeader" @change="createOptionsSet">
+<p>Filter by:</p>
+<select id="chooseHeader" v-model="mainFilterHeader" @change="createOptionsSet" :disabled="!notFiltered">
   <option v-for="header in headers" >{{header}}</option>
 </select>
-<select id="chooseOption" v-model="mainFilterOptions" @change="filterTable">
+<select id="chooseOption" v-model="mainFilterOptions" :disabled="!notFiltered">
   <option v-for="item in filterOptions">{{item}}</option>
 </select>
-<div id="reset" @click="resetFilter" class="filter-button">
-  Reset
+<div id="confirm" @click="filterTable" v-if="notFiltered">
+  Confirm
 </div>
 </div>
 </template>
 
 <script>
+import {eventBus} from 'main';
+
 export default {
   props: ['currentPage'],
   data(){
@@ -20,12 +23,13 @@ export default {
       mainFilterHeader: "",
       mainFilterOptions: "",
       filterOptions: "",
-      dataType: ""
+      dataType: "",
+      notFiltered: 1
     }
   },
   computed: {
     items(){
-      return this.$store.state.items;
+      return this.$store.state.filteredItems;
     },
     headers(){
       return this.$store.getters.headers;
@@ -52,12 +56,7 @@ export default {
     filterTable(){
       this.$emit('loadNextPage', 1);
       this.$store.commit('filterTable', {key: this.filterHeader, value: this.mainFilterOptions, type: this.dataType});
-    },
-    resetFilter(){
-      this.$store.commit('resetFilter');
-      this.mainFilterHeader = "";
-      this.mainFilterOptions = "";
-      this.filterOptions = "";
+      this.notFiltered = 0;
     },
     createNumberRanges(){
       var allValues = [];
@@ -85,6 +84,15 @@ export default {
           }
       }
     }
+  },
+  created(){
+    eventBus.$on('resetSelectedFilter', () =>{
+      this.mainFilterHeader = "";
+      this.mainFilterOptions = "";
+      this.filterOptions = "";
+      this.notFiltered = 1;
+      this.$emit('loadNextPage', 1);
+    })
   }
 }
 </script>
@@ -95,12 +103,12 @@ export default {
 
 #filtering-block {
   @include flex($fxd: row, $jc: flex-start);
-  width: 90%;
+  width: 100%;
   flex-wrap: no-wrap;
-  margin: 0;
+  margin: 10px 0 0 0;
   padding: 0;
   * {
-    margin: 0 15px 0 0;
+    margin: 0 25px 0 0;
   }
 }
 
@@ -114,8 +122,13 @@ export default {
   cursor: pointer;
 }
 
-#reset {
-  margin-left: auto;
-  margin-right: 0;
+#confirm {
+  padding: 3px 8px;
+  background-color: white;
+  border: 2px solid $green;
+  border-radius: 5px;
+  cursor: pointer;
+  letter-spacing: 1.2px;
 }
+
 </style>
