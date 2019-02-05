@@ -14,10 +14,12 @@ export const store = new Vuex.Store({
   },
   getters: {
     headers: state => {
-      return Object.keys(state.items[0]).map((header) =>{
-        header = header.replace(/_/g, " ");
-        return header.charAt(0).toUpperCase() + header.substr(1);
-      });
+      if (state.items.length > 0){
+        return Object.keys(state.items[0]).map((header) =>{
+          header = header.replace(/_/g, " ");
+          return header.charAt(0).toUpperCase() + header.substr(1);
+        });
+      }
     }
   },
   mutations: {

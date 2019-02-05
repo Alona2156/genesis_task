@@ -4,7 +4,7 @@
       <td class="header" v-if="header !== ' id'" v-for="header in headers" v-bind:class="{'colored': header === sortBy}" @click="sortByHeader(header)">{{header}}</td>
     </tr>
     <tr v-for="item in itemsPerPage">
-      <td v-if="key !== '_id'" v-for="(value, key) in item"><input type="text" v-model="value" @input="updateItem(item, key, value)" :disabled="item !== selectedItem" /></td>
+      <td v-if="key !== '_id'" v-for="(value, key) in item"><input type="text" v-model="value" v-bind:size="sizeValue(value)" @input="updateItem(item, key, value)" :disabled="item !== selectedItem" /></td>
       <td class="icons"><i class="fas fa-trash-alt" @click="deleteItem(item)"></i><i v-bind:class="[item === selectedItem ? 'fas fa-check-circle' : 'fas fa-edit']" @click="editItem(item)"></i></td>
     </tr>
   </table>
@@ -18,9 +18,7 @@ export default {
   data(){
     return {
       showItemsPerPage: 10,
-      selectedItem: "",
-      newValue: "",
-      cellNumber: 0
+      selectedItem: ""
     }
   },
   computed: {
@@ -35,6 +33,14 @@ export default {
     }
   },
   methods: {
+    sizeValue(value){
+      if (typeof value === "string"){
+        return value.length + 1;
+      }
+      else {
+        return 5;
+      }
+    },
     sortByHeader(header){
       this.prevSortBy = this.sortBy;
       this.sortBy = header;
@@ -91,7 +97,6 @@ export default {
       border: none;
       font-size: 16px;
       box-sizing: border-box;
-      width: 80px;
     }
   }
   .header {
