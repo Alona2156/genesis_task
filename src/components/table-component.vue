@@ -1,12 +1,9 @@
 <template>
-  <div id="table" v-if="items.length > 0">
+  <div id="table">
   <p id="sorting">Sorted by: {{sortBy}}, {{order}}</p>
-  <filtering v-bind:currentPage="currentPage" v-on:updatePage="updateCurrentPage($event)"></filtering>
+  <filtering  v-bind:currentPage="currentPage" v-on:updatePage="updateCurrentPage($event)"></filtering>
   <items-table v-bind:currentPage="currentPage" v-bind:sortBy="sortBy" v-bind:prevSortBy="prevSortBy" v-bind:order="order" v-on:update_sortBy_prevSortBy_order="updateData($event)"></items-table>
   <pagination v-bind:currentPage="currentPage" v-on:loadNextPage="updateCurrentPage($event)"></pagination>
-</div>
-<div v-else>
-Table is empty
 </div>
 </template>
 
@@ -22,11 +19,6 @@ export default {
       sortBy: "Name",
       prevSortBy: "Name",
       order: 'mixed'
-    }
-  },
-  computed: {
-    items(){
-      return this.$store.state.filteredItems;
     }
   },
   methods: {
@@ -61,6 +53,8 @@ export default {
 
 #table {
   @include flex(center, flex-start, column);
+  min-width: 800px;
+  margin-bottom: 20px;
 }
 
 </style>

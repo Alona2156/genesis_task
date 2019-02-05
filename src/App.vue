@@ -25,8 +25,8 @@ export default {
 @import '~@/_body.scss';
 
 #app {
-  @include flex($ai: flex-start);
-  position: absolute;
+  @include flex();
+  margin-top:10px;
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

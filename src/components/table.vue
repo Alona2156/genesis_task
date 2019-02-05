@@ -1,5 +1,5 @@
 <template>
-  <table id="items" border="1">
+  <table id="items" border="1" v-if="items.length > 0" >
     <tr>
       <td class="header" v-if="header !== ' id'" v-for="header in headers" v-bind:class="{'colored': header === sortBy}" @click="sortByHeader(header)">{{header}}</td>
     </tr>
@@ -8,6 +8,9 @@
       <td class="icons"><i class="fas fa-trash-alt" @click="deleteItem(item)"></i><i v-bind:class="[item === selectedItem ? 'fas fa-check-circle' : 'fas fa-edit']" @click="editItem(item)"></i></td>
     </tr>
   </table>
+  <div v-else>
+  Table is empty
+  </div>
 </template>
 
 <script>
@@ -89,14 +92,32 @@ export default {
 <style lang="scss">
 @import '~@/_colors.scss';
 
+.no-style {
+  border:none;
+background-image:none;
+background-color:transparent;
+-webkit-box-shadow: none;
+-moz-box-shadow: none;
+box-shadow: none;
+}
+
 #items {
   border-collapse: collapse;
   td {
     input {
-      padding: 10px;
+      @extend .no-style;
+      padding: 5px;
       border: none;
       font-size: 16px;
       box-sizing: border-box;
+      font-weight: 200;
+    }
+    input[type=text]:disabled{
+      @extend .no-style;
+      color: $grey;
+      font-weight: 200;
+      -webkit-text-fill-color: $grey;
+      -webkit-opacity: 1;
     }
   }
   .header {

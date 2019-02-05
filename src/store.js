@@ -115,7 +115,7 @@ export const store = new Vuex.Store({
 },
   actions: {
     getItems({commit}){
-      axios.get('http://localhost:3001/items')
+      axios.get('http://192.168.1.117:3001/items')
         .then(response =>{
           commit('getItems', response.data);
         })
@@ -124,7 +124,7 @@ export const store = new Vuex.Store({
         })
     },
     updateItemInDB({commit}, item){
-      axios.put('http://localhost:3001/items/update', item)
+      axios.put('http://192.168.1.117:3001/items/update', item)
       .then(response =>{
         commit('updateItemInDB', response.data);
       })
@@ -133,7 +133,7 @@ export const store = new Vuex.Store({
       })
     },
     deleteItemFromDB({commit, dispatch}, item){
-      axios.delete('http://localhost:3001/items/delete', {params: {_id: item._id}})
+      axios.delete('http://192.168.1.117:3001/items/delete', {params: {_id: item._id}})
       .then(response =>{
         dispatch('getItems');
       })
