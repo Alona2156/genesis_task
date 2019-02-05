@@ -34,8 +34,9 @@ export default{
 @import '~@/_colors.scss';
 
 #pages{
-    @include flex($fxd: row);
+    @include flex(center, center, row);
     margin-top: 20px;
+    width: calc(100% - 80px);
     .page {
       @include flex();
       height: 30px;

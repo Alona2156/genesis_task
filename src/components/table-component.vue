@@ -52,7 +52,7 @@ export default {
 }
 
 #table {
-  @include flex();
+  @include flex(center, flex-start, column);
 }
 
 </style>

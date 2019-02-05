@@ -27,7 +27,7 @@ export default {
 #app {
   @include flex($ai: flex-start);
   position: absolute;
-  width: 800px;
+  width: 850px;
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

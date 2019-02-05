@@ -2,7 +2,7 @@
 <div id="filtering-block">
 <p>Filter by:</p>
 <select id="chooseHeader" v-model="mainFilterHeader" @change="createOptionsSet" :disabled="!notFiltered">
-  <option v-for="header in headers" >{{header}}</option>
+  <option v-if="header !== ' id'" v-for="header in headers" >{{header}}</option>
 </select>
 <select id="chooseOption" v-model="mainFilterOptions" :disabled="!notFiltered">
   <option v-for="item in filterOptions">{{item}}</option>
@@ -107,6 +107,7 @@ export default {
 #filtering-block {
   @include flex($fxd: row, $jc: flex-start);
   width: 100%;
+  height: 32px;
   flex-wrap: no-wrap;
   margin: 10px 0 0 0;
   padding: 0;

@@ -24,7 +24,20 @@ export const store = new Vuex.Store({
   getItems(state, data) {
     state.items = data.items;
     state.itemsCount = data.count;
-    state.filteredItems = state.items;
+    if (state.filteredItems.length === 0){
+      state.filteredItems = state.items;
+    }
+    else {
+      state.filteredItems.forEach((item) =>{
+        if(state.items.some(element => element._id === item._id)){
+          //
+        }
+        else {
+          var index = state.filteredItems.indexOf(item);
+          state.filteredItems.splice(index, 1);
+        }
+      })
+    }
   },
   sortBy(state, data) {
     var falseValues = ['none', 'n/a', 'unknown', undefined];
@@ -85,6 +98,17 @@ export const store = new Vuex.Store({
     },
     resetFilter(state){
       this.state.filteredItems = this.state.items;
+    },
+    updateItemInDB(state, newItem){
+      function replaceItem(arrayOfItems){
+        arrayOfItems.map((item) =>{
+          if (item._id === newItem._id){
+            return item = newItem;
+          }
+        })
+      }
+      replaceItem(this.state.items);
+      replaceItem(this.state.filteredItems);
     }
 },
   actions: {
@@ -96,6 +120,24 @@ export const store = new Vuex.Store({
         .catch(error=>{
           console.log(error);
         })
+    },
+    updateItemInDB({commit}, item){
+      axios.put('http://localhost:3001/items/update', item)
+      .then(response =>{
+        commit('updateItemInDB', response.data);
+      })
+      .catch(error =>{
+        console.log(error);
+      })
+    },
+    deleteItemFromDB({commit, dispatch}, item){
+      axios.delete('http://localhost:3001/items/delete', {params: {_id: item._id}})
+      .then(response =>{
+        dispatch('getItems');
+      })
+      .catch(error =>{
+        console.log(error);
+      })
     }
   }
 })

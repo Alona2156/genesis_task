@@ -1,6 +1,6 @@
 <template>
   <div id="mainContainer">
-    <filtering-block v-bind:currentPage="currentPage" v-bind:numberOfFilters="numberOfFilters" v-on:loadNextPage="updatePage($event)" v-for="index in numberOfFilters"></filtering-block>
+    <filtering-block v-bind:currentPage="currentPage" v-bind:numberOfFilters="numberOfFilters" v-on:loadNextPage="updatePage($event)" v-for="index in numberOfFilters" v-bind:key="index"></filtering-block>
     <div id="buttonsContainer">
       <div id="addFilter" class="filter-button" @click="addNewFilter">
          Add filter
@@ -56,8 +56,8 @@ export default {
 @import '~@/_add-reset-button.scss';
 
 #mainContainer {
-  @include flex();
-  width: 100%;
+  @include flex(center, flex-start, column);
+  width: calc(100% - 80px);
 }
 
 #buttonsContainer {
